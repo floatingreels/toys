@@ -2,7 +2,12 @@ package be.vdab.toys.orders.data;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -19,6 +24,8 @@ public class Order {
     private Customer customer;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @OneToMany(mappedBy = "order")
+    private Set<OrderDetail> orderDetails;
     @Version
     private short version;
 
@@ -30,6 +37,7 @@ public class Order {
         this.comments = comments;
         this.customer = customer;
         this.status = status;
+        this.orderDetails = new LinkedHashSet<>();
     }
 
     protected Order() {}
@@ -60,5 +68,16 @@ public class Order {
 
     public Status getStatus() {
         return status;
+    }
+
+    public Set<OrderDetail> getOrderDetails() {
+        return Collections.unmodifiableSet(orderDetails);
+    }
+
+    public BigDecimal calculateTotal() {
+        return getOrderDetails()
+                .stream()
+                .map(OrderDetail::calculateValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -48,4 +48,9 @@ public class OrderDetail {
     public BigDecimal getPriceEach() {
         return priceEach;
     }
+
+    public BigDecimal calculateValue() {
+        var ordered = BigDecimal.valueOf(getOrdered());
+        return getPriceEach().multiply(ordered);
+    }
 }
