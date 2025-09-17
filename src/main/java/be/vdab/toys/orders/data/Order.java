@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private LocalDate ordered;
     private LocalDate required;
     private LocalDate shipped;
@@ -22,11 +22,13 @@ public class Order {
     @Version
     private short version;
 
-    public Order(LocalDate ordered, LocalDate required, LocalDate shipped, String comments, Status status) {
+    public Order(LocalDate ordered, LocalDate required, LocalDate shipped, String comments, Customer customer, Status status) {
+        this.id = 0;
         this.ordered = ordered;
         this.required = required;
         this.shipped = shipped;
         this.comments = comments;
+        this.customer = customer;
         this.status = status;
     }
 

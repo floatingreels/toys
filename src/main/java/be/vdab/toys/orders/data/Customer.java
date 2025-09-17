@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String name;
     private String streetAndNumber;
     private String city;
@@ -18,5 +18,45 @@ public class Customer {
     private Country country;
     @Version
     private short version;
+
+    public Customer(String name, String streetAndNumber, String city, String state, String postalCode, Country country) {
+        this.id = 0;
+        this.name = name;
+        this.streetAndNumber = streetAndNumber;
+        this.city = city;
+        this.state = state;
+        this.postalCode = postalCode;
+        this.country = country;
+    }
+
+    protected Customer() {}
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getStreetAndNumber() {
+        return streetAndNumber;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
 }
 

@@ -11,4 +11,19 @@ public class Country {
     private String name;
     @Version
     private short version;
+
+    public Country(String name) {
+        this.id = 0;
+        this.name = name;
+    }
+
+    protected  Country() {}
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -12,4 +12,23 @@ public class ProductLine {
     private String description;
     @Version
     private short version;
+
+    public ProductLine(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    protected ProductLine() {}
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
