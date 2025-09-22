@@ -18,13 +18,10 @@ public class Product {
     private int inStock;
     private int inOrder;
     private BigDecimal price;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "productlineId")
-    private ProductLine productLine;
     @Version
     private short version;
 
-    public Product(String name, String scale, String description, int inStock, int inOrder, BigDecimal price, ProductLine productLine) {
+    public Product(String name, String scale, String description, int inStock, int inOrder, BigDecimal price) {
         this.id = 0;
         this.name = name;
         this.scale = scale;
@@ -32,7 +29,6 @@ public class Product {
         this.inStock = inStock;
         this.inOrder = inOrder;
         this.price = price;
-        this.productLine = productLine;
     }
 
     protected Product() {}
@@ -63,10 +59,6 @@ public class Product {
 
     public BigDecimal getPrice() {
         return price;
-    }
-
-    public ProductLine getProductLine() {
-        return productLine;
     }
 
     public void updateOrder(int ordered) {

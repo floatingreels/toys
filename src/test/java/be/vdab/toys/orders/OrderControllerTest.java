@@ -49,14 +49,14 @@ public class OrderControllerTest {
 
     @Test
     @Sql("/orders.sql")
-    void shipCancelledOrderFails() {
-        var id = findIdOfCancelledOrder();
+    void shipOrderFailsIfAlreadyShipped() {
+        var id = findIdOfShippedOrder();
         assertThat(mockMvcTester.post().uri("/orders/"+ id + "/shippings"))
                 .hasStatus(HttpStatus.CONFLICT);
     }
 
-    private long findIdOfCancelledOrder() {
-        return jdbc.sql("select id from orders where status = 'CANCELLED'")
+    private long findIdOfShippedOrder() {
+        return jdbc.sql("select id from orders where status = 'SHIPPED' limit 1")
                 .query(Integer.class)
                 .single();
     }
