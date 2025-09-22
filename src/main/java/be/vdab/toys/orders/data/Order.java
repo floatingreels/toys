@@ -1,13 +1,11 @@
 package be.vdab.toys.orders.data;
 
+import be.vdab.toys.orders.error.OrderAlreadyShippedException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "orders")
@@ -79,5 +77,29 @@ public class Order {
                 .stream()
                 .map(OrderDetail::calculateValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void ship() {
+        updateStatusForShipment();
+        updateOrderDetailsForShipment();
+        updateShippingDate();
+    }
+
+    private void updateOrderDetailsForShipment() {
+        for (OrderDetail orderDetail : orderDetails) {
+            orderDetail.updateProductForShipment();
+        }
+    }
+
+    private void updateStatusForShipment() {
+        if (Objects.requireNonNull(getStatus()) == Status.SHIPPED) {
+            throw new OrderAlreadyShippedException();
+        } else {
+            status = Status.SHIPPED;
+        }
+    }
+
+    private void updateShippingDate() {
+        shipped = LocalDate.now();
     }
 }

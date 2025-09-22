@@ -3,6 +3,7 @@ package be.vdab.toys.orders.data;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "orderdetails")
@@ -18,6 +19,8 @@ public class OrderDetail {
     private Product product;
     private int ordered;
     private BigDecimal priceEach;
+    @Version
+    private int version;
 
     public OrderDetail(Order order, Product product, int ordered, BigDecimal priceEach) {
         this.id = 0;
@@ -52,5 +55,22 @@ public class OrderDetail {
     public BigDecimal calculateValue() {
         var ordered = BigDecimal.valueOf(getOrdered());
         return getPriceEach().multiply(ordered);
+    }
+
+    public void updateProductForShipment() {
+        product.updateOrder(ordered);
+        product.updateStock(ordered);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDetail that = (OrderDetail) o;
+        return Objects.equals(order, that.order) && Objects.equals(product, that.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(order, product);
     }
 }

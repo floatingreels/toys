@@ -2,11 +2,10 @@ package be.vdab.toys.orders;
 
 import be.vdab.toys.orders.data.OrderFullResponse;
 import be.vdab.toys.orders.data.OrderUnshippedResponse;
+import be.vdab.toys.orders.error.OrderCurrentlyBeingModifiedException;
 import be.vdab.toys.orders.error.OrderNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Stream;
 
@@ -32,5 +31,14 @@ public class OrderController {
         return orderService.findByNumber(number)
                 .map(OrderFullResponse::new)
                 .orElseThrow(() -> new OrderNotFoundException(number));
+    }
+
+    @PostMapping("{number}/shippings")
+    void shipOrder(@PathVariable long number) {
+        try {
+            orderService.shipOrder(number);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new OrderCurrentlyBeingModifiedException();
+        }
     }
 }

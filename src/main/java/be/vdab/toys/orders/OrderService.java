@@ -2,6 +2,7 @@ package be.vdab.toys.orders;
 
 import be.vdab.toys.orders.data.Order;
 import be.vdab.toys.orders.data.Status;
+import be.vdab.toys.orders.error.OrderNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,5 +27,12 @@ public class OrderService {
 
     Optional<Order> findByNumber(long number) {
         return orderRepository.findById(number);
+    }
+
+    @Transactional
+    void shipOrder(long number) {
+        orderRepository.findAndLockById(number)
+                .orElseThrow(() -> new OrderNotFoundException(number))
+                .ship();
     }
 }

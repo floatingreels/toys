@@ -1,8 +1,10 @@
 package be.vdab.toys.orders.data;
 
+import be.vdab.toys.orders.error.OrderInsufficientStockException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "products")
@@ -65,5 +67,33 @@ public class Product {
 
     public ProductLine getProductLine() {
         return productLine;
+    }
+
+    public void updateOrder(int ordered) {
+        if (ordered > inOrder) {
+            throw new OrderInsufficientStockException();
+        } else {
+            inOrder -= ordered;
+        }
+    }
+
+    public void updateStock(int ordered) {
+        if (ordered > inStock) {
+            throw new OrderInsufficientStockException();
+        } else {
+            inStock -= ordered;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(name, product.name) && Objects.equals(description, product.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description);
     }
 }
