@@ -38,7 +38,8 @@ public class Order {
         this.orderDetails = new LinkedHashSet<>();
     }
 
-    protected Order() {}
+    protected Order() {
+    }
 
     public Long getId() {
         return id;
